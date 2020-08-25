@@ -6,14 +6,17 @@ import java.util.ArrayList;
 
 public class Word {
 
-    private ArrayList<String> words;
-    private String secret;
+    private ArrayList<String> words;//dicionario com as 320139
+    private String secret;//frase secreta
+
     private Character[] associated;
     private ArrayList<String[]> secretsWords;
 
     private String[] decrypt;
     private String special="#";
     private int sizeAlfa=44;
+
+    private int[] ts;
 
     /** Método atribuir valor em words
      * @param file String - arquivo a ser carregado. Este arquivo tem um dicionário de palavras
@@ -24,8 +27,15 @@ public class Word {
             FileReader fr = new FileReader(file);
             BufferedReader br = new BufferedReader(fr);
             String line;
-            line = br.readLine();
-            words.add(line);
+
+            while(true){
+                line = br.readLine();
+                if(line!=null){
+                    words.add(line);
+                }else{
+                    break;
+                }
+            }
             while(line!=null){
                 words.add(line);
                 line = br.readLine();
@@ -33,6 +43,10 @@ public class Word {
         }catch(Exception e){
             System.out.println("Error on load file "+file);
         }
+    }
+
+    public ArrayList<String> getWords(){
+        return words;
     }
 
     /** Método atribuir valor em secret
@@ -148,6 +162,24 @@ public class Word {
         }
         return secretsWords;
     }
+    public ArrayList<String[]> makekey0to44(){
+        //test key 0 up to sizeAlfa
+        secretsWords = new ArrayList<String[]>();
+        //split message
+        String[] secretWords = getSecret().split(special);
+        String[] line;
+        for (int i=0;i<sizeAlfa;i++){
+            //cript all words with the key i
+            line = new String[secretWords.length];
+            for (int j=0;j<secretWords.length;j++){
+                //System.out.println("Word "+secretWords[j]);
+                line[j] = makeKey(i,secretWords[j]);
+                //System.out.println("Word "+ line[j]);
+            }
+            secretsWords.add(line);
+        }
+        return secretsWords;
+    }
 
     /** Método semelhante ao método makeKey
      * @param x int - chave a ser testada
@@ -174,5 +206,37 @@ public class Word {
         }
         return temp;
     }
+
+    public int[] countMatch(){
+        ts = new int[secretsWords.size()];
+        for (int i=0; i<secretsWords.size(); i++){
+            for (int j=0;j<secretsWords.get(i).length;j++){
+                System.out.print(secretsWords.get(i)[j]);
+                System.out.print("#");
+                //verify if word secretsWords.get(i)[j] exists in dictionary
+                if(words.contains(secretsWords.get(i)[j].toLowerCase())){
+                    //System.out.println("FOUND");
+                    ts[i]++;
+                }
+            }
+            //System.out.println();
+        }
+        return ts;
+
+    }
+
+    public int biggerCount(){
+        int m=0;
+        int position=0;
+        for(int i=0;i<ts.length;i++){
+            if(ts[i]>m){
+                m=ts[i];//amout of identicals
+                position=i;
+            }
+        }
+        return position;
+    }
+
+
 
 }

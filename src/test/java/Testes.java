@@ -6,6 +6,16 @@ import java.util.ArrayList;
 public class Testes {
 
     @Test
+    public void TestaWord(){
+        System.out.println("-------Test Words");
+        Word w = new Word();
+        w.setWords(".//pt/pt.txt");
+        int totalPalabras = w.getWords().size();
+        System.out.println("Temos "+totalPalabras);
+        assertEquals(totalPalabras,320139);
+    }
+
+    @Test
     public void TestSecret(){
         System.out.println("-------Test Secret");
         Word w = new Word();
@@ -54,6 +64,40 @@ public class Testes {
         }
     }
 
+    @Test
+    public void TestaMakeKey0to44(){
+        System.out.println("Testando MakeKey0to5");
+        Word palavras = new Word();
+        palavras.setAssociated();
+        palavras.setSecret("SecretMessage.txt");
+        ArrayList<String[]> m = palavras.makekey0to44();
+        for (int i=0;i<m.size();i++){
+            System.out.print("key = "+i+" ");
+            for(int j=0;j<m.get(i).length;j++){
+                System.out.print(m.get(i)[j]+" ");
+            }
+            System.out.println();
+        }
+    }
+
+    @Test
+    public void testaCountMatch(){
+        System.out.println("Testando Contadores");
+        Word w = new Word();
+        w.setAssociated();
+        w.setSecret("SecretMessage.txt");
+        w.setWords(".//pt/pt.txt");
+        w.makekey0to44();
+        int[] ts = w.countMatch();
+        for(int i=0;i<ts.length;i++){
+            System.out.println("Ts "+i+" "+ts[i]);
+        }
+        int k = w.biggerCount();
+        System.out.println("Chave = "+k);
+        for(int i=0;i<w.makekeyx(k).length;i++) {
+            System.out.print(w.makekeyx(k)[i]+" ");
+        }
+    }
 
     @Test
     public void finalTest(){
@@ -63,6 +107,5 @@ public class Testes {
         w.setAssociated();
         w.setSecret("SecretMessage.txt");
         w.makekey0to5();
-
     }
 }
