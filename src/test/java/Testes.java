@@ -39,6 +39,20 @@ public class Testes {
         assertEquals(m, "VICCENZO");
     }
 
+    @Test
+    public void TestaMakeKey0to5(){
+        System.out.println("Testando MakeKey0to5");
+        Word palavras = new Word();
+        palavras.setAssociated();
+        palavras.setSecret("SecretMessage.txt");
+        ArrayList<String[]> m = palavras.makekey0to5();
+        for (int i=0;i<m.size();i++){
+            for(int j=0;j<m.get(i).length;j++){
+                System.out.print(m.get(i)[j]+" ");
+            }
+            System.out.println();
+        }
+    }
 
 
     @Test
